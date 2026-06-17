@@ -244,14 +244,26 @@
     margin-top:14px; font-size:13px; color:#6b6378; line-height:1.6; min-height:40px; font-weight:600;
   }
 
+  .btn-row{
+    margin-top:16px; display:flex; gap:10px;
+  }
   .retry-btn{
-    margin-top:16px; width:100%; padding:15px 0; border-radius:18px; border:none;
+    flex:1; padding:15px 0; border-radius:18px; border:none;
     background: linear-gradient(90deg, var(--coral), var(--pink));
-    color:#fff; font-weight:900; font-size:15px; cursor:pointer;
+    color:#fff; font-weight:900; font-size:14px; cursor:pointer;
     box-shadow:0 8px 20px rgba(255,107,107,0.35);
     font-family:inherit;
   }
   .retry-btn:active{ transform:scale(0.97); }
+
+  .share-btn{
+    flex:1; padding:15px 0; border-radius:18px; border:none;
+    background:#000; color:#fff; font-weight:900; font-size:14px; cursor:pointer;
+    box-shadow:0 8px 20px rgba(0,0,0,0.25);
+    font-family:inherit;
+    display:flex; align-items:center; justify-content:center; gap:6px;
+  }
+  .share-btn:active{ transform:scale(0.97); }
 
   .rate-table{
     width:100%; max-width:380px; margin-top:20px;
@@ -483,10 +495,22 @@ function renderReveal(){
       <div class="item-name">${result.item.name}</div>
     </div>
     <div class="item-desc">${result.item.desc}</div>
-    <button class="retry-btn" id="retryBtn">もう一回ほじる</button>
+    <div class="btn-row">
+      <button class="share-btn" id="shareBtn">Xでシェア</button>
+      <button class="retry-btn" id="retryBtn">もう一回ほじる</button>
+    </div>
   `;
   progressArea.innerHTML = "";
   document.getElementById("retryBtn").addEventListener("click", resetGacha);
+  document.getElementById("shareBtn").addEventListener("click", shareToX);
+}
+
+function shareToX(){
+  const r = result.rarity;
+  const text = `【${r.label}】が出ました！「${result.item.name}」を入手！\n鼻くそガチャ`;
+  const pageUrl = window.location.href;
+  const shareUrl = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(text) + "&url=" + encodeURIComponent(pageUrl);
+  window.open(shareUrl, "_blank");
 }
 
 function render(){
