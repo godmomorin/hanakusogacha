@@ -3,7 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>鼻くそガチャ</title>
+<title>鼻くそガチャ｜君はどんな鼻くそを手に入れる？</title>
+<meta name="description" content="鼻をほじって鼻くそを集める無料ブラウザゲーム「鼻くそガチャ」。ノーマルからギャラクシーレアまで、レア鼻くそを集めよう。5回/10回チャレンジや鼻くそベットギャンブルモードも搭載。">
+<meta property="og:title" content="鼻くそガチャ">
+<meta property="og:description" content="鼻をほじって鼻くそを集める無料ブラウザゲーム。レア鼻くそを集めよう！">
+<meta property="og:type" content="website">
 <script type="module">
   // ===================== Supabase 設定 =====================
   // 下の SUPABASE_URL と SUPABASE_ANON_KEY を、あなたのSupabaseプロジェクトの値に
@@ -462,6 +466,10 @@
     background: linear-gradient(135deg,#ff8fc6,#ffb13d); border-color:#ffb13d; color:#2a2236;
   }
   .bet-all-btn:disabled{ opacity:0.3; cursor:not-allowed; }
+  .bet-half-btn{
+    background: linear-gradient(135deg, var(--mint), var(--sky)); border-color:var(--sky); color:#0f2b22;
+  }
+  .bet-half-btn:disabled{ opacity:0.3; cursor:not-allowed; }
   .bet-amount-btn:disabled{ opacity:0.3; cursor:not-allowed; }
   .skip-btn{
     padding:8px 14px; border-radius:12px; border:none;
@@ -1280,6 +1288,7 @@ function renderStageIdleLike(){
       <div class="bet-amount-current">ベット額：<span>${betAmount}</span>点</div>
       <div class="bet-amount-row">
         ${BET_OPTIONS.map(v => `<button class="bet-amount-btn" data-amount="${v}" ${(betAmount + v) > betPoints ? 'disabled' : ''}>+${v}</button>`).join("")}
+        <button class="bet-amount-btn bet-half-btn" id="betHalfBtn" ${betPoints <= 0 ? 'disabled' : ''}>半額</button>
         <button class="bet-amount-btn bet-all-btn" id="betAllBtn" ${betPoints <= 0 ? 'disabled' : ''}>全額</button>
       </div>
       <button class="bet-custom-toggle-btn" id="betCustomToggleBtn">${showBetCustomInput ? "その他の金額を閉じる ▲" : "その他の金額を入力 ▼"}</button>
@@ -1326,6 +1335,10 @@ function renderStageIdleLike(){
         betAmount = Math.min(betAmount + add, betPoints);
         renderStageIdleLike();
       });
+    });
+    document.getElementById("betHalfBtn").addEventListener("click", () => {
+      betAmount = Math.max(Math.floor(betPoints / 2), 0);
+      renderStageIdleLike();
     });
     document.getElementById("betAllBtn").addEventListener("click", () => {
       betAmount = Math.max(betPoints, 0);
