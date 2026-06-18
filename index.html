@@ -95,6 +95,21 @@
     position:relative;
     z-index:1;
   }
+  .sound-toggle-btn{
+    position:fixed; top:14px; right:14px; z-index:50;
+    padding:7px 12px; border-radius:14px; border:2px solid var(--line);
+    background:#fff; color:var(--ink); font-weight:800; font-size:11px;
+    cursor:pointer; font-family:inherit; box-shadow:var(--shadow);
+  }
+  .sound-toggle-btn.muted{
+    background:#f0ede6; color:var(--sub); border-color:var(--sub);
+  }
+  .home-btn{
+    position:fixed; top:14px; left:14px; z-index:50;
+    padding:7px 12px; border-radius:14px; border:2px solid var(--line);
+    background:#fff; color:var(--ink); font-weight:800; font-size:11px;
+    cursor:pointer; font-family:inherit; box-shadow:var(--shadow);
+  }
   .eyebrow{
     font-size:12px;
     font-weight:800;
@@ -137,15 +152,6 @@
     border: 3px solid #fff0d6;
     position:relative;
     z-index:1;
-  }
-  .machine::before{
-    content:"";
-    position:absolute;
-    top:-14px; left:50%;
-    transform:translateX(-50%);
-    width:90px; height:28px;
-    background: linear-gradient(90deg, var(--coral), var(--pink));
-    border-radius:0 0 20px 20px;
   }
 
   .stage{
@@ -324,6 +330,23 @@
   .mode-select .mode-ttl{
     font-size:11px; color:var(--sub); margin-bottom:8px; letter-spacing:1px; font-weight:800; text-align:center;
   }
+  #machineLabel{
+    width:100%; max-width:380px; margin:0 auto; text-align:center; position:relative; z-index:1;
+  }
+  .machine-ttl{
+    display:inline-flex; align-items:center; gap:7px;
+    margin-bottom:12px;
+    padding:8px 20px;
+    background:#fff;
+    border:2px solid var(--coral);
+    border-radius:20px;
+    box-shadow: var(--shadow);
+    font-size:12px; color:var(--coral); letter-spacing:1px; font-weight:800;
+  }
+  .machine-ttl .dot-badge{
+    display:inline-block; width:7px; height:7px; border-radius:50%;
+    background: linear-gradient(135deg, var(--mint), var(--sky));
+  }
   .mode-row{ display:flex; gap:10px; }
   .mode-btn{
     flex:1; padding:14px 8px; border-radius:18px; border:2px solid var(--line);
@@ -339,14 +362,184 @@
   .mode-btn .mode-sub{ font-size:10px; color:var(--sub); font-weight:700; }
   .mode-btn:active{ transform:scale(0.97); }
 
+  .gamble-btn{
+    background: linear-gradient(135deg,#2a2236,#4a3a5c);
+    border-color:#2a2236;
+  }
+  .gamble-btn .mode-label{ color:#ffd34d; }
+  .gamble-btn .mode-sub{ color:#cbb8e0; }
+  .gamble-btn .mode-sub-hot{
+    color:#ffd34d; font-weight:900; margin-top:2px; font-size:11px;
+    animation: hot-pulse 1.1s ease-in-out infinite;
+  }
+  @keyframes hot-pulse{
+    0%,100%{ opacity:0.85; transform:scale(1); }
+    50%{ opacity:1; transform:scale(1.04); }
+  }
+  .gamble-btn.active{
+    border-color: var(--lavender);
+    background: linear-gradient(135deg,#3a2c4c,#5a4470);
+  }
+
+  .hunch-card{
+    width:100%; max-width:320px; margin:0 auto 10px; padding:12px 14px;
+    background: linear-gradient(135deg,#2a2236,#4a3a5c); border-radius:16px;
+    text-align:center; box-shadow: var(--shadow); position:relative; z-index:1;
+  }
+  .hunch-row{ margin-bottom:8px; display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap; }
+  .hunch-value{
+    font-family:'Mochiy Pop One', sans-serif; font-size:12px; color:#ffd34d;
+    line-height:1.4; word-break:break-word; cursor:pointer; text-decoration:underline dotted;
+  }
+  .hunch-list-link-btn{
+    padding:3px 9px; border-radius:10px; border:1px solid #5a4470;
+    background:transparent; color:#cbb8e0; font-weight:700; font-size:10px;
+    cursor:pointer; font-family:inherit; flex-shrink:0;
+  }
+  .hunch-list-item{
+    background:#fff; border:2px solid var(--line); border-radius:14px;
+    padding:12px 14px; margin-bottom:10px; text-align:left;
+  }
+  .hunch-list-text{
+    font-family:'Mochiy Pop One', sans-serif; font-size:13px; color:var(--ink); margin-bottom:8px;
+  }
+  .hunch-list-item .hunch-detail{
+    background:#faf8f3; margin-bottom:0;
+  }
+  .hunch-list-item .hunch-detail-row{ color:var(--sub); }
+  .hunch-list-item .hunch-detail-pct{ color:var(--ink); }
+  .hunch-list-item .hunch-detail-row.is-target .hunch-detail-pct{ color:var(--coral); }
+  .bet-amount-current{
+    font-size:12px; color:#fff; font-weight:800; margin-bottom:6px;
+  }
+  .bet-amount-current span{
+    font-family:'Mochiy Pop One', sans-serif; font-size:17px; color:#ffd34d; margin:0 2px;
+  }
+  .bet-amount-row{ display:flex; gap:5px; justify-content:center; margin-bottom:6px; flex-wrap:wrap; }
+  .bet-custom-toggle-btn{
+    display:block; margin:0 auto 6px; padding:4px 10px; border-radius:10px; border:none;
+    background:transparent; color:#cbb8e0; font-weight:700; font-size:10px;
+    cursor:pointer; font-family:inherit; text-decoration:underline;
+  }
+  .bet-custom-input{
+    width:100px; padding:6px 8px; border-radius:10px; border:2px solid #5a4470;
+    background:rgba(255,255,255,0.95); color:#2a2236; font-weight:800; font-size:12px;
+    font-family:inherit; text-align:center;
+  }
+  .bet-custom-add-btn{
+    padding:6px 14px; border-radius:10px; border:2px solid #5a4470;
+    background:#fff; color:#2a2236; font-weight:800; font-size:12px;
+    cursor:pointer; font-family:inherit;
+  }
+  .bet-action-row{ display:flex; gap:6px; justify-content:center; margin-top:6px; }
+  .bet-action-row .bet-clear-btn{ flex:0 0 auto; }
+  .bet-action-row .skip-btn{ flex:1; }
+  .bet-clear-btn{
+    padding:8px 14px; border-radius:12px;
+    border:2px solid #e0455a; background:rgba(224,69,90,0.12); color:#ff8a98;
+    font-weight:800; font-size:11px; cursor:pointer; font-family:inherit;
+  }
+  .bet-clear-btn:disabled{ opacity:0.3; cursor:not-allowed; }
+  .stage-disabled .hint{ color:#e0455a; }
+  .hunch-detail{
+    background:rgba(255,255,255,0.08); border-radius:12px; padding:8px 12px; margin-bottom:8px;
+    display:flex; flex-direction:column; gap:3px;
+  }
+  .hunch-detail-row{
+    display:flex; align-items:center; gap:8px; font-size:11px; color:#cbb8e0; font-weight:700;
+  }
+  .hunch-detail-row .dot{ width:8px; height:8px; border-radius:50%; display:inline-block; flex-shrink:0; }
+  .hunch-detail-label{ flex:1; text-align:left; }
+  .hunch-detail-pct{ color:#fff; font-weight:900; }
+  .hunch-detail-row.is-target .hunch-detail-pct{ color:#ffd34d; }
+  .bet-amount-btn{
+    padding:6px 10px; border-radius:10px; border:2px solid #5a4470;
+    background:rgba(255,255,255,0.08); color:#fff; font-weight:800; font-size:12px;
+    cursor:pointer; font-family:inherit; min-width:38px;
+  }
+  .bet-amount-btn.active{ background:#ffd34d; color:#2a2236; border-color:#ffd34d; }
+  .bet-all-btn{
+    background: linear-gradient(135deg,#ff8fc6,#ffb13d); border-color:#ffb13d; color:#2a2236;
+  }
+  .bet-all-btn:disabled{ opacity:0.3; cursor:not-allowed; }
+  .bet-amount-btn:disabled{ opacity:0.3; cursor:not-allowed; }
+  .skip-btn{
+    padding:8px 14px; border-radius:12px; border:none;
+    background:#fff; color:#2a2236; font-weight:900; font-size:11px; cursor:pointer; font-family:inherit;
+  }
+  .skip-btn:active{ transform:scale(0.97); }
+
+  .penalty-note{
+    font-size:12px; color:#e0455a; font-weight:800; margin-top:4px;
+  }
+  .hunch-result-note{
+    font-size:12px; color:var(--sub); font-weight:700; margin-top:4px;
+  }
+  .gamble-stop-btn{
+    margin-top:10px; width:100%; background:#2a2236;
+    box-shadow:0 8px 20px rgba(42,34,54,0.3);
+  }
+
+  .ranking-btn{
+    background: linear-gradient(135deg,#ffd34d,#ff8fc6);
+    border-color:#ffb13d;
+  }
+  .ranking-btn .mode-label{ color:#2a2236; }
+  .ranking-btn .mode-sub{ color:#5a4a30; }
+
+  .rule-card{
+    width:100%; max-width:380px; margin:10px auto 0; padding:14px 16px;
+    background:#fff; border:2px solid var(--line); border-radius:16px;
+    text-align:left; box-shadow: var(--shadow);
+  }
+  .rule-card.bet-rule-card{ border-color:#5a4470; }
+  .rule-card-ttl{ font-size:13px; font-weight:900; color:var(--ink); margin-bottom:6px; }
+  .rule-card-summary{ font-size:12px; color:var(--sub); line-height:1.6; margin-bottom:8px; }
+  .rule-more-btn{
+    padding:6px 14px; border-radius:12px; border:2px solid var(--line);
+    background:#faf8f3; color:var(--ink); font-weight:800; font-size:11px;
+    cursor:pointer; font-family:inherit;
+  }
+  .rule-detail{
+    margin-top:10px; padding-top:10px; border-top:1px dashed var(--line);
+    display:flex; flex-direction:column; gap:6px;
+  }
+  .rule-detail-row{
+    font-size:12px; color:var(--ink); font-weight:700; display:flex; align-items:center; gap:7px;
+  }
+  .rule-detail-row .dot{ width:9px; height:9px; border-radius:50%; display:inline-block; flex-shrink:0; }
+  .rule-detail-note{ font-size:11px; color:var(--sub); line-height:1.6; margin-top:2px; }
+
+  .rank-tabs{ display:flex; gap:8px; justify-content:center; margin-bottom:16px; flex-wrap:wrap; }
+  .rank-tab-btn{
+    padding:8px 14px; border-radius:14px; border:2px solid var(--line);
+    background:#fff; color:var(--ink); font-weight:800; font-size:12px;
+    cursor:pointer; font-family:inherit;
+  }
+  .rank-tab-btn.active{
+    border-color: var(--coral); background: linear-gradient(135deg,#fff5f5,#fff); color: var(--coral);
+  }
+
   .challenge-status{
     width:100%; max-width:380px; margin-bottom:14px; position:relative; z-index:1;
   }
   .challenge-card{
     background:#fff; border-radius:18px; padding:14px 18px;
-    box-shadow: var(--shadow); display:flex; align-items:center; justify-content:space-between;
+    box-shadow: var(--shadow);
     border:2px solid #ffe3ea;
   }
+  .challenge-card.bet-theme{ border-color:#5a4470; }
+  .mode-badge{
+    display:inline-block; padding:5px 14px; border-radius:20px; margin-bottom:10px;
+    background: linear-gradient(135deg,#ff8fc6,#ffb13d); color:#fff;
+    font-family:'Mochiy Pop One', sans-serif; font-size:14px; font-weight:900;
+    box-shadow:0 4px 10px rgba(255,143,198,0.35);
+  }
+  .challenge-card.bet-theme .mode-badge{
+    background: linear-gradient(135deg,#4a3a5c,#2a2236); color:#ffd34d;
+    box-shadow:0 4px 10px rgba(42,34,54,0.35);
+  }
+  .challenge-card-body{ display:flex; align-items:center; justify-content:space-between; }
   .challenge-card .c-label{ font-size:12px; color:var(--sub); font-weight:800; }
   .challenge-card .c-value{ font-size:20px; font-weight:900; color:var(--coral); font-family:'Mochiy Pop One', sans-serif; }
   .challenge-card .c-divider{ width:2px; height:28px; background:var(--line); margin:0 14px; }
@@ -441,21 +634,25 @@
 
 
 <header>
+  <button class="home-btn" id="homeBtn">🏠 ホーム</button>
+  <button class="sound-toggle-btn" id="soundToggleBtn">🔊 サウンドON</button>
   <div class="eyebrow">NOSE PICKING GACHA</div>
-  <h1>鼻くそガチャ</h1>
+  <h1 id="titleHomeBtn" style="cursor:pointer;">鼻くそガチャ</h1>
   <div class="catchphrase">君はどんな鼻くそを手に入れる？</div>
   <div class="subtitle">鼻をほじってね！鼻くそが出てくるよ！</div>
 </header>
 
-<div class="mode-select" id="modeSelect"></div>
+<div id="machineLabel"></div>
 <div class="challenge-status" id="challengeStatus"></div>
-
 <div class="machine">
   <div id="stageArea"></div>
   <div class="progress-wrap" id="progressArea"></div>
 </div>
 
 <div class="rate-table" id="rateTable"></div>
+
+<div class="mode-select" id="modeSelect"></div>
+
 <div class="history" id="historyArea"></div>
 
 <footer>made for fun · タップ操作対応</footer>
@@ -563,6 +760,137 @@ function rollItem(rarity){
   return rarity.items[Math.floor(Math.random()*rarity.items.length)];
 }
 
+// ===== 予感セリフ定義 =====
+// groups: [{keys:[...], prob: 数値}, ...] の配列。各グループの確率を指定し、
+// 指定されなかった残りのレアリティは「その他」として元の比率で自動的に分配される。
+// なお、ギャラクシーレアはどのセリフでも常に固定0.01%として扱われる（groupsの指定とは独立）。
+const HUNCH_LINES = [
+  { text: "鼻がむずむずしてきた", groups: [{ keys: ["rare","super","legend","galaxy"], prob: 25 }] },
+  { text: "いい鼻くそが出そうだ", groups: [{ keys: ["rare","super","legend","galaxy"], prob: 50 }] },
+  { text: "自信があります。私の鼻くそを信じて", groups: [{ keys: ["rare","super","legend","galaxy"], prob: 75 }] },
+  { text: "鼻くそたまりすぎて逆に気持ちいい", groups: [{ keys: ["super","legend","galaxy"], prob: 25 }] },
+  { text: "こ！これは！？とんでもない鼻くそが出そうだ！！", groups: [{ keys: ["super","legend","galaxy"], prob: 50 }] },
+  { text: "今から出る鼻くそを見た後、皆は私を尊敬してしまうでしょう", groups: [{ keys: ["super","legend","galaxy"], prob: 75 }] },
+  { text: "鼻水出そう", groups: [{ keys: ["normal"], prob: 50 }] },
+  { text: "ひぃ！！！！！鼻の中が大事件だ！！！", groups: [{ keys: ["legend"], prob: 25 }] },
+  { text: "みんな今までありがとう。俺は鼻くそ神になる！！", groups: [{ keys: ["legend"], prob: 40 }, { keys: ["normal"], prob: 50 }] },
+];
+
+let currentHunchLine = null; // 今表示中の予感セリフオブジェクト
+
+function pickNewHunchLine(){
+  currentHunchLine = HUNCH_LINES[Math.floor(Math.random()*HUNCH_LINES.length)];
+  showHunchDetail = false;
+  showBetCustomInput = false;
+}
+
+// 通常モードでの「実質的な出現率」を計算する（rollRarity()のrate合計が100に届かない分は
+// 暗黙的に最後の要素＝ノーマルに加算される仕様のため、その分も含めて正規化する）
+function getEffectiveRates(){
+  const total = RARITIES.reduce((s,r)=>s+r.rate,0);
+  const miss = Math.max(0, 100 - total);
+  return RARITIES.map((r,i) => {
+    const isLast = i === RARITIES.length - 1;
+    // rollRarity()の実装上、外れた100-totalの分は配列の最後の要素（galaxy）ではなく
+    // 実際には誰にも当たらずRARITIES[0]（normal）が返る仕様なので、missはnormalに加算する
+    return { key: r.key, rate: r.key === "normal" ? r.rate + miss : r.rate };
+  });
+}
+
+// groups: [{keys, prob}, ...] を受け取り、各レアリティの最終的な実際の確率(%)を計算する。
+// グループに含まれないレアリティは「その他」として、残り確率を元の比率で分配する。
+function calcHunchRarityBreakdown(groups){
+  const GALAXY_FIXED_RATE = RARITIES.find(r => r.key === "galaxy").rate; // 常に0.01%固定
+  const nonGalaxyRarities = RARITIES.filter(r => r.key !== "galaxy");
+  const effectiveRates = getEffectiveRates().filter(r => r.key !== "galaxy");
+  // galaxy分のレートを除いた残り(99.99%)を100%相当として再正規化する
+  const nonGalaxyTotal = effectiveRates.reduce((s,r)=>s+r.rate,0);
+  const scale = nonGalaxyTotal > 0 ? (100 - GALAXY_FIXED_RATE) / nonGalaxyTotal : 0;
+  const scaledRates = effectiveRates.map(r => ({ key: r.key, rate: r.rate * scale }));
+
+  const usedKeys = groups.flatMap(g => g.keys).filter(k => k !== "galaxy");
+  const otherPool = scaledRates.filter(r => !usedKeys.includes(r.key));
+  const otherTotal = otherPool.reduce((s,r)=>s+r.rate,0);
+  const usedProbTotal = groups.reduce((s,g)=>s+g.prob,0);
+  const remainingProb = Math.max(0, (100 - GALAXY_FIXED_RATE) - usedProbTotal);
+
+  const breakdown = {};
+  RARITIES.forEach(r => { breakdown[r.key] = 0; });
+  breakdown.galaxy = GALAXY_FIXED_RATE;
+
+  groups.forEach(g => {
+    const keysExceptGalaxy = g.keys.filter(k => k !== "galaxy");
+    const pool = scaledRates.filter(r => keysExceptGalaxy.includes(r.key));
+    const poolTotal = pool.reduce((s,r)=>s+r.rate,0);
+    pool.forEach(r => {
+      breakdown[r.key] = poolTotal > 0 ? g.prob * (r.rate / poolTotal) : 0;
+    });
+  });
+  otherPool.forEach(r => {
+    breakdown[r.key] = otherTotal > 0 ? remainingProb * (r.rate / otherTotal) : 0;
+  });
+  return breakdown; // { normal: 12.3, rare: 25.0, super: ..., legend: ..., galaxy: 0.01 }
+}
+
+function formatPct(v){
+  if(v >= 1) return v.toFixed(1).replace(/\.0$/, "");
+  if(v <= 0) return "0";
+  return v.toFixed(2).replace(/0$/, "").replace(/\.$/, "");
+}
+
+function rollRarityWithGroups(groups){
+  const galaxyRarity = RARITIES.find(r => r.key === "galaxy");
+  const GALAXY_FIXED_RATE = galaxyRarity.rate; // 常に0.01%固定
+
+  // 第一段階：ギャラクシーレアが出るかどうかを固定0.01%で判定
+  if(Math.random()*100 < GALAXY_FIXED_RATE){
+    return galaxyRarity;
+  }
+
+  // 第二段階：ギャラクシー以外（99.99%分）の中で、グループ指定の確率に従って選ぶ
+  const nonGalaxyRarities = RARITIES.filter(r => r.key !== "galaxy");
+  const effectiveRates = getEffectiveRates().filter(r => r.key !== "galaxy");
+  const nonGalaxyTotal = effectiveRates.reduce((s,r)=>s+r.rate,0);
+  const scale = nonGalaxyTotal > 0 ? (100 - GALAXY_FIXED_RATE) / nonGalaxyTotal : 0;
+  const scaledRates = effectiveRates.map(r => ({ key: r.key, rate: r.rate * scale }));
+
+  const usedKeys = groups.flatMap(g => g.keys).filter(k => k !== "galaxy");
+  const otherPool = scaledRates.filter(r => !usedKeys.includes(r.key));
+  const otherTotal = otherPool.reduce((s,r)=>s+r.rate,0);
+  const usedProbTotal = groups.reduce((s,g)=>s+g.prob,0);
+  const remainingProb = Math.max(0, (100 - GALAXY_FIXED_RATE) - usedProbTotal);
+
+  const roll = Math.random()*(100 - GALAXY_FIXED_RATE);
+  let acc = 0;
+  for(const g of groups){
+    acc += g.prob;
+    if(roll < acc){
+      const keysExceptGalaxy = g.keys.filter(k => k !== "galaxy");
+      const pool = scaledRates.filter(r => keysExceptGalaxy.includes(r.key));
+      const poolTotal = pool.reduce((s,r)=>s+r.rate,0);
+      if(poolTotal <= 0) return RARITIES.find(r => r.key === (pool[0] ? pool[0].key : nonGalaxyRarities[0].key));
+      const r2 = Math.random()*poolTotal;
+      let acc2 = 0;
+      let chosenKey = pool[pool.length-1].key;
+      for(const rarity of pool){
+        acc2 += rarity.rate;
+        if(r2 < acc2){ chosenKey = rarity.key; break; }
+      }
+      return RARITIES.find(r => r.key === chosenKey);
+    }
+  }
+  // どのグループにも当たらなかった場合は「その他」プールから選ぶ
+  if(otherTotal <= 0) return RARITIES.find(r => r.key === (otherPool[0] ? otherPool[0].key : nonGalaxyRarities[0].key));
+  const r2 = Math.random()*otherTotal;
+  let acc2 = 0;
+  let chosenKey = otherPool[otherPool.length-1].key;
+  for(const rarity of otherPool){
+    acc2 += rarity.rate;
+    if(r2 < acc2){ chosenKey = rarity.key; break; }
+  }
+  return RARITIES.find(r => r.key === chosenKey);
+}
+
 let phase = "idle"; // idle | digstep | digging | dropped | glowing | reveal | summary
 let digCount = 0;
 let result = null;
@@ -571,10 +899,42 @@ let history = [];
 const DIG_NEEDED = 3;
 
 // チャレンジモード用の状態
-let challengeMode = null;      // null(通常) | 5 | 10
+let challengeMode = null;      // null(通常) | 5 | 10 | "bet"
 let challengeCount = 0;        // チャレンジ内で何回ガチャを引いたか
-let challengeScore = 0;        // チャレンジ内の累計スコア
+let challengeScore = 0;        // チャレンジ内の累計スコア（5/10回チャレンジ用）
 let challengeLog = [];         // チャレンジ内の各結果ログ
+
+// ベットギャンブルモード専用の状態
+const BET_START_POINTS = 100;
+const BET_OPTIONS = [1, 5, 10, 50, 100, 500, 1000];
+const BET_MAX_COUNT = 10; // ベットギャンブルの最大プレイ回数
+let betPoints = BET_START_POINTS;   // 現在の持ち点
+let betAmount = 0;     // 選択中のベット額（タップで積算）
+let betSkipStreak = 0;              // 見送り連続回数
+let betLog = [];                    // ベットモードの履歴
+let showHunchDetail = false;        // 予感セリフをタップして詳細を表示中か
+
+// モード選択画面の「もっと詳しく」表示状態
+let showChallengeRuleDetail = false;
+let showBetRuleDetail = false;
+let showBetCustomInput = false; // ベットのカスタム金額入力欄を開いているか
+
+// 見送りペナルティ：streak回目の見送りで「その時点の持ち点」の (streak×10)% を失う。
+// 10回連続で見送ると、10回目には必ず持ち点の100%（全額）を失う計算になる。
+function skipPenaltyFor(streak, currentPoints){
+  const pct = Math.min(streak * 10, 100);
+  return Math.round(currentPoints * pct / 100);
+}
+
+// ベット配当倍率（ノーマルは没収=0倍）
+const BET_PAYOUT = {
+  normal: 0,
+  rare: 1.5,
+  super: 4,
+  legend: 8,
+  galaxy: 80,
+};
+const GOLD_PAYOUT_MULTIPLIER = 2; // SR/LRがゴールドの場合、配当をさらに2倍
 
 const stageArea = document.getElementById("stageArea");
 const progressArea = document.getElementById("progressArea");
@@ -585,8 +945,181 @@ const challengeStatus = document.getElementById("challengeStatus");
 
 function img(key){ return ASSETS[key] || ""; }
 
+/* ===================== SOUND ENGINE ===================== */
+let audioCtx = null;
+let soundEnabled = true; // サウンドON/OFF状態（trueなら鳴らす）
+
+function toggleSound(){
+  soundEnabled = !soundEnabled;
+  renderSoundToggle();
+}
+
+function renderSoundToggle(){
+  const el = document.getElementById("soundToggleBtn");
+  if(!el) return;
+  el.textContent = soundEnabled ? "🔊 サウンドON" : "🔇 サウンドOFF";
+  el.classList.toggle("muted", !soundEnabled);
+}
+function getAudioCtx(){
+  if(!audioCtx){
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if(audioCtx.state === "suspended"){
+    audioCtx.resume();
+  }
+  return audioCtx;
+}
+
+// 単純なオシレーター音を1つ鳴らす
+// type: "sine" | "square" | "triangle" | "sawtooth"
+// freq: 周波数(Hz), start: 開始時刻からの遅延(秒), dur: 鳴動時間(秒), vol: ピーク音量(0-1)
+function playTone(ctx, {type="sine", freq=440, start=0, dur=0.12, vol=0.25, slideTo=null}){
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = type;
+  const t0 = ctx.currentTime + start;
+  osc.frequency.setValueAtTime(freq, t0);
+  if(slideTo !== null){
+    osc.frequency.exponentialRampToValueAtTime(Math.max(slideTo,1), t0 + dur);
+  }
+  gain.gain.setValueAtTime(0, t0);
+  gain.gain.linearRampToValueAtTime(vol, t0 + 0.012);
+  gain.gain.exponentialRampToValueAtTime(0.001, t0 + dur);
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start(t0);
+  osc.stop(t0 + dur + 0.02);
+}
+
+// 「コツッ」というタップ音：短いノイズ寄りの高音クリック
+function sfxTap(){
+  if(!soundEnabled) return;
+  try{
+    const ctx = getAudioCtx();
+    playTone(ctx, { type:"square", freq:850, dur:0.045, vol:0.12, slideTo:500 });
+  }catch(e){}
+}
+
+// 「ポロッ」という排出音：軽く弾むような下降音
+function sfxDrop(){
+  if(!soundEnabled) return;
+  try{
+    const ctx = getAudioCtx();
+    playTone(ctx, { type:"sine", freq:520, dur:0.16, vol:0.22, slideTo:300 });
+  }catch(e){}
+}
+
+// 光る瞬間（まだ何が出たか分からない、予兆としての控えめなきらめき音）
+function sfxGlow(){
+  if(!soundEnabled) return;
+  try{
+    const ctx = getAudioCtx();
+    playTone(ctx, { type:"sine", freq:1200, dur:0.3, vol:0.1, slideTo:1800 });
+  }catch(e){}
+}
+
+// 結果確定の瞬間：レア度ごとに豪華さを変える。ノーマルは「がっかり音」
+function sfxRevealResult(rarityKey, isGold){
+  if(!soundEnabled) return;
+  try{
+    const ctx = getAudioCtx();
+    if(rarityKey === "normal"){
+      // がっかり感のある下降音（しょぼん…という感じ）
+      playTone(ctx, { type:"sine", freq:330, dur:0.45, vol:0.16, slideTo:180 });
+      playTone(ctx, { type:"sine", freq:247, start:0.16, dur:0.4, vol:0.13, slideTo:140 });
+    } else if(rarityKey === "rare"){
+      playTone(ctx, { type:"triangle", freq:523, dur:0.14, vol:0.22 });
+      playTone(ctx, { type:"triangle", freq:659, start:0.08, dur:0.18, vol:0.22 });
+    } else if(rarityKey === "super"){
+      playTone(ctx, { type:"triangle", freq:523, dur:0.12, vol:0.24 });
+      playTone(ctx, { type:"triangle", freq:659, start:0.09, dur:0.12, vol:0.24 });
+      playTone(ctx, { type:"triangle", freq:784, start:0.18, dur:0.22, vol:0.26 });
+    } else if(rarityKey === "legend"){
+      [523,659,784,988].forEach((f,i) => {
+        playTone(ctx, { type:"sawtooth", freq:f, start:i*0.09, dur:0.16, vol:0.2 });
+      });
+      playTone(ctx, { type:"sine", freq:1046, start:0.4, dur:0.5, vol:0.24 });
+    } else if(rarityKey === "galaxy"){
+      [523,659,784,988,1318,1568].forEach((f,i) => {
+        playTone(ctx, { type:"sawtooth", freq:f, start:i*0.08, dur:0.18, vol:0.22 });
+      });
+      playTone(ctx, { type:"sine", freq:1568, start:0.5, dur:0.7, vol:0.28 });
+      playTone(ctx, { type:"sine", freq:2093, start:0.6, dur:0.7, vol:0.2 });
+      playTone(ctx, { type:"sine", freq:2637, start:0.7, dur:0.6, vol:0.14 });
+    }
+    if(isGold && rarityKey !== "normal"){
+      playTone(ctx, { type:"sine", freq:1760, start:0.05, dur:0.3, vol:0.16 });
+      playTone(ctx, { type:"sine", freq:2349, start:0.12, dur:0.3, vol:0.12 });
+    }
+  }catch(e){}
+}
+
+// ベットの当たり音：明るい上昇アルペジオ
+function sfxBetWin(){
+  if(!soundEnabled) return;
+  try{
+    const ctx = getAudioCtx();
+    [523,659,784,1046].forEach((f,i) => {
+      playTone(ctx, { type:"triangle", freq:f, start:i*0.07, dur:0.18, vol:0.22 });
+    });
+  }catch(e){}
+}
+
+// ベットの外れ音：低く沈む下降音
+function sfxBetLose(){
+  if(!soundEnabled) return;
+  try{
+    const ctx = getAudioCtx();
+    playTone(ctx, { type:"sawtooth", freq:220, dur:0.3, vol:0.18, slideTo:90 });
+  }catch(e){}
+}
+
+// 見送りペナルティ音：警告的な短いブザー
+function sfxSkipPenalty(){
+  if(!soundEnabled) return;
+  try{
+    const ctx = getAudioCtx();
+    playTone(ctx, { type:"square", freq:180, dur:0.18, vol:0.16 });
+  }catch(e){}
+}
+/* ===================== /SOUND ENGINE ===================== */
+
+
+// タイトル直下の「通常の鼻くそガチャ」ラベルの表示制御。
+// チャレンジ/ベットモード中や、結果集計・ランキング・予感一覧ページを見ている間は隠す。
+function renderMachineLabel(){
+  const el = document.getElementById("machineLabel");
+  if(!el) return;
+  const hide = !!challengeMode || phase === "summary" || phase === "ranking" || phase === "hunchlist";
+  el.innerHTML = hide ? "" : `<div class="machine-ttl"><span class="dot-badge"></span>通常の鼻くそガチャ</div>`;
+}
+
 function renderModeSelect(){
-  if(phase === "summary"){ modeSelect.innerHTML = ""; return; }
+  renderMachineLabel();
+  if(phase === "summary" || phase === "ranking" || challengeMode){ modeSelect.innerHTML = ""; return; }
+
+  const challengeDetailHtml = showChallengeRuleDetail ? `
+    <div class="rule-detail">
+      <div class="rule-detail-row"><span class="dot" style="background:${RARITIES[0].color}"></span>ノーマルレア：5点</div>
+      <div class="rule-detail-row"><span class="dot" style="background:${RARITIES[1].color}"></span>レア：7点</div>
+      <div class="rule-detail-row"><span class="dot" style="background:${RARITIES[2].color}"></span>スーパーレア：15点（金は+10点）</div>
+      <div class="rule-detail-row"><span class="dot" style="background:${RARITIES[3].color}"></span>レジェンドレア：35点（金は+10点）</div>
+      <div class="rule-detail-row"><span class="dot" style="background:${RARITIES[4].color}"></span>ギャラクシーレア：350点</div>
+      <div class="rule-detail-note">※スーパーレア・レジェンドレアは50%の確率で「金」になり、+10点のボーナスがつきます</div>
+    </div>
+  ` : "";
+
+  const betDetailHtml = showBetRuleDetail ? `
+    <div class="rule-detail">
+      <div class="rule-detail-row"><span class="dot" style="background:${RARITIES[0].color}"></span>ノーマル：没収（賭け額が0倍）</div>
+      <div class="rule-detail-row"><span class="dot" style="background:${RARITIES[1].color}"></span>レア：1.5倍</div>
+      <div class="rule-detail-row"><span class="dot" style="background:${RARITIES[2].color}"></span>スーパーレア：4倍（金はさらに2倍で8倍）</div>
+      <div class="rule-detail-row"><span class="dot" style="background:${RARITIES[3].color}"></span>レジェンドレア：8倍（金はさらに2倍で16倍）</div>
+      <div class="rule-detail-row"><span class="dot" style="background:${RARITIES[4].color}"></span>ギャラクシーレア：80倍</div>
+      <div class="rule-detail-note">見送りペナルティ：その時点の持ち点の(連続回数×10)%を失う。1回目は持ち点の10%／2回目は20%／3回目は30%…と増加し、10回連続見送ると必ず持ち点が0になります（ほじると連続回数はリセット）</div>
+    </div>
+  ` : "";
+
   modeSelect.innerHTML = `
     <div class="mode-ttl">モードを選んでスコアに挑戦！</div>
     <div class="mode-row">
@@ -599,9 +1132,44 @@ function renderModeSelect(){
         <span class="mode-sub">じっくり積み上げ</span>
       </button>
     </div>
+    <div class="rule-card">
+      <div class="rule-card-ttl">📋 得点ルール</div>
+      <div class="rule-card-summary">出たレアリティの点数が加算されます。レア度が高いほど高得点、金が出るとボーナスも！</div>
+      <button class="rule-more-btn" id="challengeRuleMoreBtn">${showChallengeRuleDetail ? "閉じる ▲" : "もっと詳しく ▼"}</button>
+      ${challengeDetailHtml}
+    </div>
+    <div class="mode-row" style="margin-top:10px;">
+      <button class="mode-btn gamble-btn ${challengeMode==='bet' ? 'active' : ''}" id="modeBetBtn">
+        <span class="mode-label">🎲 鼻くそベットギャンブル</span>
+        <span class="mode-sub">100点からスタート、賭けて勝負！</span>
+        <span class="mode-sub mode-sub-hot">✨レア鼻くそいっぱい出るよ！！✨</span>
+      </button>
+    </div>
+    <div class="rule-card bet-rule-card">
+      <div class="rule-card-ttl">📋 鼻くそベットギャンブルのルール</div>
+      <div class="rule-card-summary">100点持ちで最大10回プレイ。予感を見てベット額を決め「ほじる」か「見送る」を選びます。レアな鼻くそが出るほど配当が高く、ノーマルだと没収されます。</div>
+      <button class="rule-more-btn" id="betRuleMoreBtn">${showBetRuleDetail ? "閉じる ▲" : "もっと詳しく ▼"}</button>
+      ${betDetailHtml}
+    </div>
+    <div class="mode-row" style="margin-top:10px;">
+      <button class="mode-btn ranking-btn" id="showRankingBtn">
+        <span class="mode-label">🏆 ランキングを見る</span>
+        <span class="mode-sub">みんなのスコアをチェック</span>
+      </button>
+    </div>
   `;
   document.getElementById("mode5Btn").addEventListener("click", () => startChallenge(5));
   document.getElementById("mode10Btn").addEventListener("click", () => startChallenge(10));
+  document.getElementById("modeBetBtn").addEventListener("click", () => startBetMode());
+  document.getElementById("showRankingBtn").addEventListener("click", () => showRankingPage());
+  document.getElementById("challengeRuleMoreBtn").addEventListener("click", () => {
+    showChallengeRuleDetail = !showChallengeRuleDetail;
+    renderModeSelect();
+  });
+  document.getElementById("betRuleMoreBtn").addEventListener("click", () => {
+    showBetRuleDetail = !showBetRuleDetail;
+    renderModeSelect();
+  });
 }
 
 function startChallenge(n){
@@ -610,6 +1178,20 @@ function startChallenge(n){
   challengeScore = 0;
   challengeLog = [];
   hasSubmittedThisRun = false;
+  renderRateTable();
+  resetGacha();
+}
+
+function startBetMode(){
+  challengeMode = "bet";
+  challengeCount = 0;
+  betPoints = BET_START_POINTS;
+  betAmount = 0;
+  betSkipStreak = 0;
+  betLog = [];
+  hasSubmittedThisRun = false;
+  pickNewHunchLine();
+  renderRateTable();
   resetGacha();
 }
 
@@ -618,44 +1200,195 @@ function quitChallenge(){
   challengeCount = 0;
   challengeScore = 0;
   challengeLog = [];
+  betPoints = BET_START_POINTS;
+  betSkipStreak = 0;
+  betLog = [];
+  currentHunchLine = null;
+  renderRateTable();
   resetGacha();
 }
 
+// どの画面からでもトップ（モード選択前の状態）に戻る
+function goToTop(){
+  quitChallenge();
+}
+
 function renderChallengeStatus(){
-  if(!challengeMode || phase === "summary"){ challengeStatus.innerHTML = ""; return; }
-  challengeStatus.innerHTML = `
-    <div class="challenge-card">
-      <div>
-        <div class="c-label">回数</div>
-        <div class="c-value">${challengeCount} / ${challengeMode}</div>
+  if(!challengeMode || phase === "summary" || phase === "ranking"){ challengeStatus.innerHTML = ""; return; }
+  if(challengeMode === "bet"){
+    challengeStatus.innerHTML = `
+      <div class="challenge-card bet-theme">
+        <div class="mode-badge">🎲 鼻くそベットギャンブル中</div>
+        <div class="challenge-card-body">
+          <div>
+            <div class="c-label">持ち点</div>
+            <div class="c-value">${betPoints}点</div>
+          </div>
+          <div class="c-divider"></div>
+          <div>
+            <div class="c-label">プレイ回数</div>
+            <div class="c-value">${challengeCount} / ${BET_MAX_COUNT}</div>
+          </div>
+        </div>
       </div>
-      <div class="c-divider"></div>
-      <div>
-        <div class="c-label">累計スコア</div>
-        <div class="c-value">${challengeScore}点</div>
+      <button class="challenge-quit" id="quitBtn">ベットをやめて終了する</button>
+    `;
+  } else {
+    challengeStatus.innerHTML = `
+      <div class="challenge-card">
+        <div class="mode-badge">${challengeMode}回チャレンジ中</div>
+        <div class="challenge-card-body">
+          <div>
+            <div class="c-label">回数</div>
+            <div class="c-value">${challengeCount} / ${challengeMode}</div>
+          </div>
+          <div class="c-divider"></div>
+          <div>
+            <div class="c-label">累計スコア</div>
+            <div class="c-value">${challengeScore}点</div>
+          </div>
+        </div>
       </div>
-    </div>
-    <button class="challenge-quit" id="quitBtn">チャレンジをやめる</button>
-  `;
-  document.getElementById("quitBtn").addEventListener("click", quitChallenge);
+      <button class="challenge-quit" id="quitBtn">チャレンジをやめる</button>
+    `;
+  }
+  document.getElementById("quitBtn").addEventListener("click", () => {
+    if(challengeMode === "bet"){
+      phase = "summary";
+      render();
+      renderModeSelect();
+      renderChallengeStatus();
+    } else {
+      quitChallenge();
+    }
+  });
 }
 
 function renderStageIdleLike(){
   const digging = phase === "digging";
+  const showBetUI = challengeMode === "bet" && (phase === "idle" || phase === "digstep");
+
+  const canDig = !showBetUI || betAmount > 0;
+
+  const betUI = showBetUI ? `
+    <div class="hunch-card">
+      <div class="hunch-row">
+        <span class="hunch-value" id="hunchValueBtn">🔮「${currentHunchLine.text}」</span>
+        <button class="hunch-list-link-btn" id="hunchListLinkBtn">セリフ一覧</button>
+      </div>
+      ${showHunchDetail ? renderHunchDetailHtml() : ""}
+      <div class="bet-amount-current">ベット額：<span>${betAmount}</span>点</div>
+      <div class="bet-amount-row">
+        ${BET_OPTIONS.map(v => `<button class="bet-amount-btn" data-amount="${v}" ${(betAmount + v) > betPoints ? 'disabled' : ''}>+${v}</button>`).join("")}
+        <button class="bet-amount-btn bet-all-btn" id="betAllBtn" ${betPoints <= 0 ? 'disabled' : ''}>全額</button>
+      </div>
+      <button class="bet-custom-toggle-btn" id="betCustomToggleBtn">${showBetCustomInput ? "その他の金額を閉じる ▲" : "その他の金額を入力 ▼"}</button>
+      ${showBetCustomInput ? `
+        <div class="bet-amount-row">
+          <input type="number" id="betCustomInput" class="bet-custom-input" placeholder="金額を入力" min="1" max="${betPoints}">
+          <button class="bet-custom-add-btn" id="betCustomAddBtn">追加</button>
+        </div>
+      ` : ""}
+      <div class="bet-action-row">
+        <button class="bet-clear-btn" id="betClearBtn" ${betAmount === 0 ? 'disabled' : ''}>クリア</button>
+        <button class="skip-btn" id="skipBtn">見送る（▲${skipPenaltyFor(betSkipStreak+1, betPoints)}点）</button>
+      </div>
+    </div>
+  ` : "";
+
   stageArea.innerHTML = `
-    <div class="stage" id="noseStage">
+    ${betUI}
+    <div class="stage ${!canDig ? 'stage-disabled' : ''}" id="noseStage">
       <img src="${img('nose')}" alt="鼻" class="${digging ? 'nose-wiggle' : ''}" draggable="false">
-      <div class="hint">${digging ? '発掘中…' : '鼻をタップ／クリック'}</div>
+      <div class="hint">${digging ? '発掘中…' : (canDig ? '鼻をタップ／クリック' : 'まずベット額を選んでね')}</div>
       ${digging ? '<div class="digging-overlay">🔍</div>' : ''}
     </div>
   `;
-  document.getElementById("noseStage").addEventListener("click", handleDig);
+  if(canDig){
+    document.getElementById("noseStage").addEventListener("click", handleDig);
+  }
+  if(showBetUI){
+    document.getElementById("skipBtn").addEventListener("click", handleSkip);
+    document.getElementById("hunchValueBtn").addEventListener("click", () => {
+      showHunchDetail = !showHunchDetail;
+      renderStageIdleLike();
+    });
+    document.getElementById("hunchListLinkBtn").addEventListener("click", () => {
+      showHunchListPage();
+    });
+    document.getElementById("betCustomToggleBtn").addEventListener("click", () => {
+      showBetCustomInput = !showBetCustomInput;
+      renderStageIdleLike();
+    });
+    document.querySelectorAll(".bet-amount-btn[data-amount]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const add = parseInt(btn.dataset.amount, 10);
+        betAmount = Math.min(betAmount + add, betPoints);
+        renderStageIdleLike();
+      });
+    });
+    document.getElementById("betAllBtn").addEventListener("click", () => {
+      betAmount = Math.max(betPoints, 0);
+      renderStageIdleLike();
+    });
+    if(showBetCustomInput){
+      document.getElementById("betCustomAddBtn").addEventListener("click", () => {
+        const input = document.getElementById("betCustomInput");
+        const val = parseInt(input.value, 10);
+        if(!isNaN(val) && val > 0){
+          betAmount = Math.min(betAmount + val, betPoints);
+          renderStageIdleLike();
+        }
+      });
+    }
+    document.getElementById("betClearBtn").addEventListener("click", () => {
+      betAmount = 0;
+      renderStageIdleLike();
+    });
+  }
 
   const fillPct = (digCount/DIG_NEEDED)*100;
   progressArea.innerHTML = `
     <div class="progress-label">${digging ? '何かが取れそう…' : `ほじり度 ${digCount} / ${DIG_NEEDED}`}</div>
     <div class="progress-bar"><div class="progress-fill" style="width:${digging?100:fillPct}%"></div></div>
   `;
+}
+
+function renderHunchDetailHtml(){
+  const breakdown = calcHunchRarityBreakdown(currentHunchLine.groups);
+  const order = ["galaxy","legend","super","rare","normal"];
+  const usedKeys = currentHunchLine.groups.flatMap(g => g.keys);
+  const rows = order.map(key => {
+    const rarity = RARITIES.find(r => r.key === key);
+    const pct = breakdown[key] || 0;
+    const isTarget = usedKeys.includes(key);
+    return `
+      <div class="hunch-detail-row ${isTarget ? 'is-target' : ''}">
+        <span class="dot" style="background:${rarity.color}"></span>
+        <span class="hunch-detail-label">${rarity.label}</span>
+        <span class="hunch-detail-pct">${formatPct(pct)}%</span>
+      </div>
+    `;
+  }).join("");
+  return `<div class="hunch-detail">${rows}</div>`;
+}
+
+function handleSkip(){
+  betSkipStreak++;
+  const penalty = skipPenaltyFor(betSkipStreak, betPoints);
+  betPoints -= penalty;
+  betLog.push({ skipped:true, penalty, streak:betSkipStreak });
+  sfxSkipPenalty();
+  if(betPoints <= 0){
+    phase = "summary";
+    render();
+    renderModeSelect();
+    renderChallengeStatus();
+  } else {
+    pickNewHunchLine();
+    renderChallengeStatus();
+    render();
+  }
 }
 
 function renderDropped(){
@@ -698,18 +1431,35 @@ function renderReveal(){
   const cardBg = isGold ? "linear-gradient(135deg,#fff3c4,#ffcf4d,#b8860b)" : r.bg;
   const showShine = r.key !== "normal" || isGold;
   const badgeTextColor = r.isGalaxy ? "#fff" : "#1a1a1a";
+  const isBetMode = challengeMode === "bet";
 
-  const isLastOfChallenge = challengeMode && challengeCount >= challengeMode;
-  const nextLabel = challengeMode
-    ? (isLastOfChallenge ? "結果を見る" : `次へ進む（残り${challengeMode - challengeCount}回）`)
-    : "もう一回ほじる";
-  const lastEarned = challengeMode && challengeLog.length > 0
-    ? challengeLog[challengeLog.length - 1].score
-    : r.score;
-  const goldBonusNote = (challengeMode && isGold) ? `（金ボーナス+10含む）` : "";
-  const scoreLine = challengeMode
-    ? `<div class="item-desc">今回のスコア +${lastEarned}点${goldBonusNote}（累計 ${challengeScore}点）</div>`
-    : `<div class="item-desc">${result.item.desc}</div>`;
+  const isLastOfChallenge = (!isBetMode) && challengeMode && challengeCount >= challengeMode;
+  const isOutOfFunds = isBetMode && betPoints <= 0;
+  const isLastOfBet = isBetMode && (challengeCount >= BET_MAX_COUNT || isOutOfFunds);
+  const lastBetLog = betLog.length > 0 ? betLog[betLog.length - 1] : null;
+  const lastChallengeLog = challengeLog.length > 0 ? challengeLog[challengeLog.length - 1] : null;
+  const lastEarned = challengeMode && lastChallengeLog ? lastChallengeLog.score : r.score;
+  const goldBonusNote = (challengeMode && !isBetMode && isGold) ? `（金ボーナス+10含む）` : "";
+
+  let scoreLine;
+  if(isBetMode && lastBetLog){
+    const netChange = lastBetLog.netChange;
+    const resultText = netChange > 0 ? `+${netChange}点` : (netChange === 0 ? "±0点（没収）" : `${netChange}点`);
+    const goldNote = (lastBetLog.gold && (r.key === "super" || r.key === "legend")) ? "（ゴールドで配当2倍！）" : "";
+    const outOfFundsNote = isOutOfFunds ? `<div class="penalty-note">持ち点が0点以下になったため終了です</div>` : "";
+    scoreLine = `<div class="item-desc">ベット${lastBetLog.bet}点 → ${resultText}${goldNote}（持ち点 ${betPoints}点）</div>${outOfFundsNote}`;
+  } else {
+    scoreLine = challengeMode
+      ? `<div class="item-desc">今回のスコア +${lastEarned}点${goldBonusNote}（累計 ${challengeScore}点）</div>`
+      : `<div class="item-desc">${result.item.desc}</div>`;
+  }
+
+  const nextLabel = isBetMode
+    ? (isLastOfBet ? "結果を見る" : `続ける（残り${BET_MAX_COUNT - challengeCount}回・次の予感へ）`)
+    : (challengeMode ? (isLastOfChallenge ? "結果を見る" : `次へ進む（残り${challengeMode - challengeCount}回）`) : "もう一回ほじる");
+
+  const betStopButton = (isBetMode && !isLastOfBet)
+    ? `<button class="retry-btn gamble-stop-btn" id="betStopBtn">ここでやめて終了する</button>` : "";
 
   stageArea.innerHTML = `
     <div class="result-card" style="background:${cardBg}">
@@ -724,10 +1474,11 @@ function renderReveal(){
       <button class="share-btn" id="shareBtn">Xでシェア</button>
       <button class="retry-btn" id="retryBtn">${nextLabel}</button>
     </div>
+    ${betStopButton}
   `;
   progressArea.innerHTML = "";
   document.getElementById("retryBtn").addEventListener("click", () => {
-    if(isLastOfChallenge){
+    if(isLastOfChallenge || isLastOfBet){
       phase = "summary";
       render();
       renderModeSelect();
@@ -737,53 +1488,96 @@ function renderReveal(){
     }
   });
   document.getElementById("shareBtn").addEventListener("click", shareToX);
+  if(isBetMode && !isLastOfBet){
+    document.getElementById("betStopBtn").addEventListener("click", () => {
+      phase = "summary";
+      render();
+      renderModeSelect();
+      renderChallengeStatus();
+    });
+  }
 }
 
 let lastNickname = "";
 let hasSubmittedThisRun = false;
 
 function renderSummary(){
-  const best = challengeLog.reduce((a,b) => a.score > b.score ? a : b, challengeLog[0]);
-  const rows = challengeLog.map((h,i) => `
-    <div class="rs-row">
-      <span>${i+1}回目</span>
-      <span>${h.rarity.label}${h.gold ? '（金）' : ''}</span>
-      <span>+${h.score}点</span>
+  const isBetMode = challengeMode === "bet";
+  const finalScore = isBetMode ? betPoints : challengeScore;
+
+  let rows;
+  if(isBetMode){
+    rows = betLog.map((h,i) => {
+      if(h.skipped){
+        return `
+          <div class="rs-row">
+            <span>${i+1}回目</span>
+            <span>見送り</span>
+            <span>-${h.penalty}点</span>
+          </div>
+        `;
+      }
+      const goldText = h.gold && (h.rarity.key === "super" || h.rarity.key === "legend") ? '（金）' : '';
+      const changeText = h.netChange > 0 ? `+${h.netChange}点` : (h.netChange === 0 ? "没収" : `${h.netChange}点`);
+      return `
+        <div class="rs-row">
+          <span>${i+1}回目</span>
+          <span>${h.rarity.label}${goldText}（賭${h.bet}）</span>
+          <span>${changeText}</span>
+        </div>
+      `;
+    }).join("");
+  } else {
+    rows = challengeLog.map((h,i) => `
+      <div class="rs-row">
+        <span>${i+1}回目</span>
+        <span>${h.rarity.label}${h.gold ? '（金）' : ''}</span>
+        <span>+${h.score}点</span>
+      </div>
+    `).join("");
+  }
+
+  const titleText = isBetMode ? "鼻くそベットギャンブル 結果" : `${challengeMode}回チャレンジ 結果`;
+  const scoreLabel = isBetMode ? "最終持ち点（点）" : "合計スコア（点）";
+  const rankModeKey = isBetMode ? "bet" : String(challengeMode);
+  const rankModeLabel = isBetMode ? "鼻くそベットギャンブル" : `${challengeMode}回チャレンジ`;
+
+  const rankSection = `
+    <div class="rank-entry">
+      <div class="rank-entry-ttl">ニックネームを入れてランキングに登録</div>
+      <div class="rank-input-row">
+        <input type="text" id="nicknameInput" class="rank-input" placeholder="ニックネーム" maxlength="12" value="${lastNickname}">
+        <button class="rank-submit-btn" id="submitRankBtn" ${hasSubmittedThisRun ? "disabled" : ""}>${hasSubmittedThisRun ? "登録済み" : "登録する"}</button>
+      </div>
+      <div class="rank-msg" id="rankMsg"></div>
+      <div class="rank-list-ttl">${rankModeLabel} ランキング TOP20</div>
+      <div class="rank-list" id="rankList"><div class="rank-msg">読み込み中…</div></div>
     </div>
-  `).join("");
+  `;
 
   stageArea.innerHTML = `
     <div class="result-summary">
-      <div class="rs-ttl">${challengeMode}回チャレンジ 結果</div>
-      <div class="rs-score">${challengeScore}</div>
-      <div class="rs-score-label">合計スコア（点）</div>
+      <div class="rs-ttl">${titleText}</div>
+      <div class="rs-score">${finalScore}</div>
+      <div class="rs-score-label">${scoreLabel}</div>
       <div class="rs-breakdown">${rows}</div>
       <div class="btn-row">
         <button class="share-btn" id="shareSummaryBtn">Xでシェア</button>
         <button class="retry-btn" id="retrySummaryBtn">もう一度挑戦</button>
       </div>
-
-      <div class="rank-entry">
-        <div class="rank-entry-ttl">ニックネームを入れてランキングに登録</div>
-        <div class="rank-input-row">
-          <input type="text" id="nicknameInput" class="rank-input" placeholder="ニックネーム" maxlength="12" value="${lastNickname}">
-          <button class="rank-submit-btn" id="submitRankBtn" ${hasSubmittedThisRun ? "disabled" : ""}>${hasSubmittedThisRun ? "登録済み" : "登録する"}</button>
-        </div>
-        <div class="rank-msg" id="rankMsg"></div>
-        <div class="rank-list-ttl">${challengeMode}回チャレンジ ランキング TOP20</div>
-        <div class="rank-list" id="rankList"><div class="rank-msg">読み込み中…</div></div>
-      </div>
+      ${rankSection}
     </div>
   `;
   progressArea.innerHTML = "";
-  document.getElementById("retrySummaryBtn").addEventListener("click", () => startChallenge(challengeMode));
+  document.getElementById("retrySummaryBtn").addEventListener("click", () => {
+    if(isBetMode) startBetMode(); else startChallenge(challengeMode);
+  });
   document.getElementById("shareSummaryBtn").addEventListener("click", shareSummaryToX);
-  document.getElementById("submitRankBtn").addEventListener("click", handleSubmitRank);
-
-  loadRankingList();
+  document.getElementById("submitRankBtn").addEventListener("click", () => handleSubmitRank(rankModeKey, finalScore));
+  loadRankingList(rankModeKey);
 }
 
-async function handleSubmitRank(){
+async function handleSubmitRank(modeKey, score){
   const input = document.getElementById("nicknameInput");
   const msg = document.getElementById("rankMsg");
   const btn = document.getElementById("submitRankBtn");
@@ -803,12 +1597,12 @@ async function handleSubmitRank(){
   btn.textContent = "送信中…";
   msg.textContent = "";
 
-  const res = await window.submitScore(String(challengeMode), nickname, challengeScore);
+  const res = await window.submitScore(modeKey, nickname, score);
   if(res.ok){
     hasSubmittedThisRun = true;
     btn.textContent = "登録済み";
     msg.textContent = "ランキングに登録しました！";
-    loadRankingList();
+    loadRankingList(modeKey);
   } else {
     btn.disabled = false;
     btn.textContent = "登録する";
@@ -816,24 +1610,25 @@ async function handleSubmitRank(){
   }
 }
 
-async function loadRankingList(){
+async function loadRankingList(modeKey){
   const listEl = document.getElementById("rankList");
   if(!listEl) return;
   if(typeof window.fetchRanking !== "function"){
     listEl.innerHTML = `<div class="rank-msg">ランキング機能はまだ準備中です</div>`;
     return;
   }
-  const res = await window.fetchRanking(String(challengeMode));
-  if(!listEl) return; // 非同期中に画面が切り替わっていた場合の保護
+  const res = await window.fetchRanking(modeKey);
+  const stillThereEl = document.getElementById("rankList");
+  if(!stillThereEl) return; // 非同期中に画面が切り替わっていた場合の保護
   if(!res.ok){
-    listEl.innerHTML = `<div class="rank-msg">ランキングを読み込めませんでした</div>`;
+    stillThereEl.innerHTML = `<div class="rank-msg">ランキングを読み込めませんでした</div>`;
     return;
   }
   if(res.rows.length === 0){
-    listEl.innerHTML = `<div class="rank-msg">まだ誰も登録していません。一番乗りになろう！</div>`;
+    stillThereEl.innerHTML = `<div class="rank-msg">まだ誰も登録していません。一番乗りになろう！</div>`;
     return;
   }
-  listEl.innerHTML = res.rows.map((row, i) => `
+  stillThereEl.innerHTML = res.rows.map((row, i) => `
     <div class="rank-list-row">
       <span class="rank-no">${i+1}</span>
       <span class="rank-name">${escapeHtml(row.nickname || "名無し")}</span>
@@ -852,7 +1647,10 @@ function escapeHtml(str){
 }
 
 function shareSummaryToX(){
-  const text = `鼻くそガチャ ${challengeMode}回チャレンジで ${challengeScore}点 でした！\n鼻くそガチャ`;
+  const isBetMode = challengeMode === "bet";
+  const modeLabel = isBetMode ? "鼻くそベットギャンブル" : `${challengeMode}回チャレンジ`;
+  const finalScore = isBetMode ? betPoints : challengeScore;
+  const text = `鼻くそガチャ ${modeLabel}で ${finalScore}点 でした！\n鼻くそガチャ`;
   const pageUrl = window.location.href;
   const shareUrl = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(text) + "&url=" + encodeURIComponent(pageUrl);
   window.open(shareUrl, "_blank");
@@ -877,7 +1675,106 @@ function render(){
     renderReveal();
   } else if(phase === "summary"){
     renderSummary();
+  } else if(phase === "ranking"){
+    renderRankingPage();
+  } else if(phase === "hunchlist"){
+    renderHunchListPage();
   }
+}
+
+let phaseBeforeHunchList = "idle"; // 予感一覧を開く前のフェーズ（戻るボタン用）
+
+function showHunchListPage(){
+  phaseBeforeHunchList = phase;
+  phase = "hunchlist";
+  render();
+}
+
+function renderHunchListPage(){
+  const rows = HUNCH_LINES.map(line => {
+    const breakdown = calcHunchRarityBreakdown(line.groups);
+    const usedKeys = line.groups.flatMap(g => g.keys);
+    const order = ["galaxy","legend","super","rare","normal"];
+    const pctRows = order.map(key => {
+      const rarity = RARITIES.find(r => r.key === key);
+      const pct = breakdown[key] || 0;
+      const isTarget = usedKeys.includes(key);
+      return `
+        <div class="hunch-detail-row ${isTarget ? 'is-target' : ''}">
+          <span class="dot" style="background:${rarity.color}"></span>
+          <span class="hunch-detail-label">${rarity.label}</span>
+          <span class="hunch-detail-pct">${formatPct(pct)}%</span>
+        </div>
+      `;
+    }).join("");
+    return `
+      <div class="hunch-list-item">
+        <div class="hunch-list-text">「${line.text}」</div>
+        <div class="hunch-detail">${pctRows}</div>
+      </div>
+    `;
+  }).join("");
+
+  stageArea.innerHTML = `
+    <div class="result-summary">
+      <div class="rs-ttl">🔮 予感セリフ一覧</div>
+      <div class="rule-card-summary" style="text-align:center; margin-bottom:14px;">全9種類の予感セリフと、それぞれの実際の出現確率です。</div>
+      ${rows}
+      <div class="btn-row" style="margin-top:18px;">
+        <button class="retry-btn" id="backFromHunchListBtn" style="flex:1;">戻る</button>
+      </div>
+    </div>
+  `;
+  progressArea.innerHTML = "";
+  document.getElementById("backFromHunchListBtn").addEventListener("click", () => {
+    phase = phaseBeforeHunchList;
+    render();
+    renderModeSelect();
+    renderChallengeStatus();
+  });
+}
+
+let rankingViewMode = "5"; // ランキング閲覧中に選んでいるモード："5" | "10" | "bet"
+
+function showRankingPage(){
+  phase = "ranking";
+  rankingViewMode = "5";
+  render();
+  renderModeSelect();
+  renderChallengeStatus();
+}
+
+function renderRankingPage(){
+  const modeLabels = { "5":"5回チャレンジ", "10":"10回チャレンジ", "bet":"鼻くそベットギャンブル" };
+  const tabsHtml = Object.keys(modeLabels).map(key => `
+    <button class="rank-tab-btn ${rankingViewMode===key ? 'active' : ''}" data-mode="${key}">${modeLabels[key]}</button>
+  `).join("");
+
+  stageArea.innerHTML = `
+    <div class="result-summary">
+      <div class="rs-ttl">🏆 ランキング</div>
+      <div class="rank-tabs">${tabsHtml}</div>
+      <div class="rank-list-ttl">${modeLabels[rankingViewMode]} TOP20</div>
+      <div class="rank-list" id="rankList"><div class="rank-msg">読み込み中…</div></div>
+      <div class="btn-row" style="margin-top:18px;">
+        <button class="retry-btn" id="backFromRankingBtn" style="flex:1;">トップへ戻る</button>
+      </div>
+    </div>
+  `;
+  progressArea.innerHTML = "";
+  document.querySelectorAll(".rank-tab-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      rankingViewMode = btn.dataset.mode;
+      renderRankingPage();
+    });
+  });
+  document.getElementById("backFromRankingBtn").addEventListener("click", () => {
+    phase = "idle";
+    render();
+    renderModeSelect();
+    renderChallengeStatus();
+  });
+  loadRankingList(rankingViewMode);
 }
 
 function spawnSparkle(e, container){
@@ -896,30 +1793,51 @@ function spawnSparkle(e, container){
 
 function handleDig(e){
   if(phase !== "idle" && phase !== "digstep") return;
+  if(challengeMode === "bet" && betAmount <= 0) return;
   spawnSparkle(e, e.currentTarget);
+  sfxTap();
 
   digCount++;
   if(digCount >= DIG_NEEDED){
     phase = "digging";
     render();
     setTimeout(()=>{
-      const rarity = rollRarity();
+      const isBetRoll = challengeMode === "bet";
+      const rarity = isBetRoll
+        ? rollRarityWithGroups(currentHunchLine.groups)
+        : rollRarity();
       const item = rollItem(rarity);
       const gold = rarity.canGold && Math.random() < 0.5;
       result = { rarity, item };
       isGold = gold;
       phase = "dropped";
       render();
+      sfxDrop();
 
       setTimeout(()=>{
         phase = "glowing";
         render();
+        sfxGlow();
         setTimeout(()=>{
           phase = "reveal";
           history.unshift({ rarity, item, gold, ts: Date.now() });
           history = history.slice(0,12);
+          sfxRevealResult(rarity.key, gold);
 
-          if(challengeMode){
+          if(isBetRoll){
+            betSkipStreak = 0; // ほじったので見送り連続はリセット
+            let payoutMultiplier = BET_PAYOUT[rarity.key] ?? 0;
+            if(gold && (rarity.key === "super" || rarity.key === "legend")){
+              payoutMultiplier *= GOLD_PAYOUT_MULTIPLIER;
+            }
+            const netChange = Math.round(betAmount * payoutMultiplier) - betAmount;
+            betPoints += netChange;
+            challengeCount++;
+            betLog.push({ rarity, item, gold, bet: betAmount, payoutMultiplier, netChange, hunchText: currentHunchLine.text });
+            if(netChange > 0){ sfxBetWin(); } else { sfxBetLose(); }
+            pickNewHunchLine();
+            betAmount = 0; // 次のラウンドはベット額をゼロから選び直す
+          } else if(challengeMode){
             const goldBonus = gold ? 10 : 0;
             const earnedScore = rarity.score + goldBonus;
             challengeCount++;
@@ -951,6 +1869,7 @@ function resetGacha(){
 }
 
 function renderRateTable(){
+  if(challengeMode === "bet"){ rateTable.innerHTML = ""; return; }
   const rows = RARITIES.slice().reverse().map(r => `
     <div class="rate-row">
       <span><span class="dot" style="background:${r.color}"></span>${r.label}${r.canGold ? '<span class="gold-note">(50%で金・+10点)</span>' : ''}</span>
@@ -973,6 +1892,10 @@ function renderHistory(){
 renderRateTable();
 renderModeSelect();
 render();
+document.getElementById("soundToggleBtn").addEventListener("click", toggleSound);
+renderSoundToggle();
+document.getElementById("homeBtn").addEventListener("click", goToTop);
+document.getElementById("titleHomeBtn").addEventListener("click", goToTop);
 </script>
 </body>
 </html>
