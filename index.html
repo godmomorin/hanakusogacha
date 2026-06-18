@@ -4,6 +4,65 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>鼻くそガチャ</title>
+<script type="module">
+  // ===================== Firebase 設定 =====================
+  // 下の firebaseConfig の値を、あなたのFirebaseプロジェクトの設定値に
+  // 書き換えてください（Firebaseコンソール → プロジェクトの設定 → 「マイアプリ」内に表示されます）。
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import {
+    getFirestore, collection, addDoc, query, orderBy, limit, getDocs, serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDVM5fXlGC5XE9uP4tshLesu7cKUt9l-O4",
+    authDomain: "hanakusogacha.firebaseapp.com",
+    projectId: "hanakusogacha",
+    storageBucket: "hanakusogacha.firebasestorage.app",
+    messagingSenderId: "457486026277",
+    appId: "1:457486026277:web:c2b8975f99330f521461cc"
+  };
+
+  let db = null;
+  try {
+    const app = initializeApp(firebaseConfig);
+    db = getFirestore(app);
+  } catch(e) {
+    console.warn("Firebase未設定、または初期化に失敗しました。ランキング機能は無効化されます。", e);
+  }
+
+  // ランキングへの登録（modeは "5" または "10"）
+  window.submitScore = async function(mode, nickname, score){
+    if(!db) return { ok:false, error:"firebase-not-configured" };
+    try{
+      await addDoc(collection(db, "rankings_" + mode), {
+        nickname: nickname,
+        score: score,
+        createdAt: serverTimestamp()
+      });
+      return { ok:true };
+    }catch(e){
+      console.error("ランキング登録に失敗:", e);
+      return { ok:false, error:e.message };
+    }
+  };
+
+  // ランキング取得（上位20件）
+  window.fetchRanking = async function(mode){
+    if(!db) return { ok:false, error:"firebase-not-configured", rows:[] };
+    try{
+      const q = query(collection(db, "rankings_" + mode), orderBy("score", "desc"), limit(20));
+      const snap = await getDocs(q);
+      const rows = [];
+      snap.forEach(doc => rows.push(doc.data()));
+      return { ok:true, rows };
+    }catch(e){
+      console.error("ランキング取得に失敗:", e);
+      return { ok:false, error:e.message, rows:[] };
+    }
+  };
+
+  window.dispatchEvent(new Event("firebase-ready"));
+</script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Kosugi+Maru&family=Nunito:wght@600;700;800;900&display=swap');
 
@@ -265,6 +324,100 @@
   }
   .share-btn:active{ transform:scale(0.97); }
 
+  .mode-select{
+    width:100%; max-width:380px; margin-bottom:16px; position:relative; z-index:1;
+  }
+  .mode-select .mode-ttl{
+    font-size:11px; color:var(--sub); margin-bottom:8px; letter-spacing:1px; font-weight:800; text-align:center;
+  }
+  .mode-row{ display:flex; gap:10px; }
+  .mode-btn{
+    flex:1; padding:14px 8px; border-radius:18px; border:2px solid var(--line);
+    background:#fff; cursor:pointer; font-family:inherit;
+    display:flex; flex-direction:column; align-items:center; gap:2px;
+    box-shadow: var(--shadow);
+  }
+  .mode-btn.active{
+    border-color: var(--coral);
+    background: linear-gradient(135deg,#fff5f5,#fff);
+  }
+  .mode-btn .mode-label{ font-family:'Mochiy Pop One', sans-serif; font-size:14px; color:var(--ink); }
+  .mode-btn .mode-sub{ font-size:10px; color:var(--sub); font-weight:700; }
+  .mode-btn:active{ transform:scale(0.97); }
+
+  .challenge-status{
+    width:100%; max-width:380px; margin-bottom:14px; position:relative; z-index:1;
+  }
+  .challenge-card{
+    background:#fff; border-radius:18px; padding:14px 18px;
+    box-shadow: var(--shadow); display:flex; align-items:center; justify-content:space-between;
+    border:2px solid #ffe3ea;
+  }
+  .challenge-card .c-label{ font-size:12px; color:var(--sub); font-weight:800; }
+  .challenge-card .c-value{ font-size:20px; font-weight:900; color:var(--coral); font-family:'Mochiy Pop One', sans-serif; }
+  .challenge-card .c-divider{ width:2px; height:28px; background:var(--line); margin:0 14px; }
+  .challenge-quit{
+    margin-top:10px; width:100%; padding:10px 0; border-radius:14px; border:none;
+    background:#f3efe4; color:var(--sub); font-weight:800; font-size:12px; cursor:pointer; font-family:inherit;
+  }
+
+  .result-summary{
+    width:100%; max-width:380px; background:#fff; border-radius:24px; padding:24px 20px;
+    box-shadow: var(--shadow); text-align:center; position:relative; z-index:1;
+    border:3px solid #ffe3ea;
+  }
+  .result-summary .rs-ttl{
+    font-family:'Mochiy Pop One', sans-serif; font-size:18px; color:var(--coral); margin-bottom:14px;
+  }
+  .result-summary .rs-score{
+    font-family:'Mochiy Pop One', sans-serif; font-size:44px;
+    background: linear-gradient(90deg, var(--coral), var(--pink), var(--sky));
+    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+    margin-bottom:4px;
+  }
+  .result-summary .rs-score-label{ font-size:11px; color:var(--sub); font-weight:700; margin-bottom:18px; }
+  .result-summary .rs-breakdown{ display:flex; flex-direction:column; gap:6px; margin-bottom:18px; }
+  .result-summary .rs-row{
+    display:flex; justify-content:space-between; font-size:13px; font-weight:700; padding:4px 8px;
+    background:#fbf9f4; border-radius:10px;
+  }
+
+  .rank-entry{
+    margin-top:6px; padding-top:18px; border-top:2px dashed var(--line);
+  }
+  .rank-entry-ttl{
+    font-size:12px; color:var(--sub); font-weight:800; margin-bottom:8px;
+  }
+  .rank-input-row{ display:flex; gap:8px; margin-bottom:10px; }
+  .rank-input{
+    flex:1; padding:12px 14px; border-radius:14px; border:2px solid var(--line);
+    font-family:inherit; font-size:14px; color:var(--ink); outline:none;
+  }
+  .rank-input:focus{ border-color: var(--coral); }
+  .rank-submit-btn{
+    padding:12px 18px; border-radius:14px; border:none;
+    background: linear-gradient(90deg, var(--mint), var(--sky));
+    color:#fff; font-weight:900; font-size:13px; cursor:pointer; font-family:inherit;
+    white-space:nowrap;
+  }
+  .rank-submit-btn:active{ transform:scale(0.97); }
+  .rank-submit-btn:disabled{ opacity:0.5; cursor:default; }
+  .rank-msg{ font-size:12px; color:var(--sub); font-weight:700; margin-bottom:4px; min-height:16px; }
+
+  .rank-list-ttl{
+    font-size:12px; color:var(--sub); font-weight:800; margin:14px 0 8px; text-align:left;
+  }
+  .rank-list{ display:flex; flex-direction:column; gap:6px; }
+  .rank-list-row{
+    display:flex; align-items:center; gap:10px; padding:8px 10px;
+    background:#fbf9f4; border-radius:10px; font-size:13px; font-weight:700;
+  }
+  .rank-list-row .rank-no{
+    width:22px; text-align:center; font-family:'Mochiy Pop One', sans-serif; color:var(--coral); font-size:14px;
+  }
+  .rank-list-row .rank-name{ flex:1; text-align:left; color:var(--ink); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .rank-list-row .rank-score{ color:var(--sub); font-weight:900; }
+
   .rate-table{
     width:100%; max-width:380px; margin-top:20px;
     background: var(--card); border-radius:20px; padding:16px 20px;
@@ -299,6 +452,9 @@
   <div class="catchphrase">君はどんな鼻くそを手に入れる？</div>
   <div class="subtitle">鼻をほじってね！鼻くそが出てくるよ！</div>
 </header>
+
+<div class="mode-select" id="modeSelect"></div>
+<div class="challenge-status" id="challengeStatus"></div>
 
 <div class="machine">
   <div id="stageArea"></div>
@@ -339,7 +495,7 @@ const ASSETS = {
 
 const RARITIES = [
   {
-    key: "normal", label: "ノーマルレア", short: "N", rate: 50,
+    key: "normal", label: "ノーマルレア", short: "N", rate: 50, score: 5,
     color: "#9a8f80", glow: "rgba(154,143,128,0.55)",
     bg: "linear-gradient(135deg,#f5f1e8,#e7e0d2)",
     canGold: false,
@@ -352,7 +508,7 @@ const RARITIES = [
     ],
   },
   {
-    key: "rare", label: "レア", short: "R", rate: 25,
+    key: "rare", label: "レア", short: "R", rate: 25, score: 7,
     color: "#4fb6ff", glow: "rgba(79,182,255,0.65)",
     bg: "linear-gradient(135deg,#e3f4ff,#bfe6ff)",
     canGold: false,
@@ -365,7 +521,7 @@ const RARITIES = [
     ],
   },
   {
-    key: "super", label: "スーパーレア", short: "SR", rate: 5,
+    key: "super", label: "スーパーレア", short: "SR", rate: 5, score: 15,
     color: "#b48cff", glow: "rgba(180,140,255,0.75)",
     bg: "linear-gradient(135deg,#f1e9ff,#dcc8ff)",
     canGold: true,
@@ -379,7 +535,7 @@ const RARITIES = [
     ],
   },
   {
-    key: "legend", label: "レジェンドレア", short: "LR", rate: 1,
+    key: "legend", label: "レジェンドレア", short: "LR", rate: 1, score: 35,
     color: "#ff8fc6", glow: "rgba(255,143,198,0.9)",
     bg: "linear-gradient(135deg,#ffeaf6,#ffc9e6)",
     canGold: true,
@@ -390,7 +546,7 @@ const RARITIES = [
     ],
   },
   {
-    key: "galaxy", label: "ギャラクシーレア", short: "GR", rate: 0.01,
+    key: "galaxy", label: "ギャラクシーレア", short: "GR", rate: 0.01, score: 350,
     color: "#3ddc97", glow: "rgba(61,220,151,0.95)",
     bg: "linear-gradient(135deg,#0d1b2a,#1b3a4b,#3ddc97)",
     canGold: false, isGalaxy: true,
@@ -413,19 +569,82 @@ function rollItem(rarity){
   return rarity.items[Math.floor(Math.random()*rarity.items.length)];
 }
 
-let phase = "idle"; // idle | digstep | digging | dropped | glowing | reveal
+let phase = "idle"; // idle | digstep | digging | dropped | glowing | reveal | summary
 let digCount = 0;
 let result = null;
 let isGold = false;
 let history = [];
 const DIG_NEEDED = 3;
 
+// チャレンジモード用の状態
+let challengeMode = null;      // null(通常) | 5 | 10
+let challengeCount = 0;        // チャレンジ内で何回ガチャを引いたか
+let challengeScore = 0;        // チャレンジ内の累計スコア
+let challengeLog = [];         // チャレンジ内の各結果ログ
+
 const stageArea = document.getElementById("stageArea");
 const progressArea = document.getElementById("progressArea");
 const rateTable = document.getElementById("rateTable");
 const historyArea = document.getElementById("historyArea");
+const modeSelect = document.getElementById("modeSelect");
+const challengeStatus = document.getElementById("challengeStatus");
 
 function img(key){ return ASSETS[key] || ""; }
+
+function renderModeSelect(){
+  if(phase === "summary"){ modeSelect.innerHTML = ""; return; }
+  modeSelect.innerHTML = `
+    <div class="mode-ttl">モードを選んでスコアに挑戦！</div>
+    <div class="mode-row">
+      <button class="mode-btn ${challengeMode===5 ? 'active' : ''}" id="mode5Btn">
+        <span class="mode-label">5回チャレンジ</span>
+        <span class="mode-sub">短期決戦で勝負</span>
+      </button>
+      <button class="mode-btn ${challengeMode===10 ? 'active' : ''}" id="mode10Btn">
+        <span class="mode-label">10回チャレンジ</span>
+        <span class="mode-sub">じっくり積み上げ</span>
+      </button>
+    </div>
+  `;
+  document.getElementById("mode5Btn").addEventListener("click", () => startChallenge(5));
+  document.getElementById("mode10Btn").addEventListener("click", () => startChallenge(10));
+}
+
+function startChallenge(n){
+  challengeMode = n;
+  challengeCount = 0;
+  challengeScore = 0;
+  challengeLog = [];
+  hasSubmittedThisRun = false;
+  resetGacha();
+}
+
+function quitChallenge(){
+  challengeMode = null;
+  challengeCount = 0;
+  challengeScore = 0;
+  challengeLog = [];
+  resetGacha();
+}
+
+function renderChallengeStatus(){
+  if(!challengeMode || phase === "summary"){ challengeStatus.innerHTML = ""; return; }
+  challengeStatus.innerHTML = `
+    <div class="challenge-card">
+      <div>
+        <div class="c-label">回数</div>
+        <div class="c-value">${challengeCount} / ${challengeMode}</div>
+      </div>
+      <div class="c-divider"></div>
+      <div>
+        <div class="c-label">累計スコア</div>
+        <div class="c-value">${challengeScore}点</div>
+      </div>
+    </div>
+    <button class="challenge-quit" id="quitBtn">チャレンジをやめる</button>
+  `;
+  document.getElementById("quitBtn").addEventListener("click", quitChallenge);
+}
 
 function renderStageIdleLike(){
   const digging = phase === "digging";
@@ -486,6 +705,18 @@ function renderReveal(){
   const showShine = r.key !== "normal" || isGold;
   const badgeTextColor = r.isGalaxy ? "#fff" : "#1a1a1a";
 
+  const isLastOfChallenge = challengeMode && challengeCount >= challengeMode;
+  const nextLabel = challengeMode
+    ? (isLastOfChallenge ? "結果を見る" : `次へ進む（残り${challengeMode - challengeCount}回）`)
+    : "もう一回ほじる";
+  const lastEarned = challengeMode && challengeLog.length > 0
+    ? challengeLog[challengeLog.length - 1].score
+    : r.score;
+  const goldBonusNote = (challengeMode && isGold) ? `（金ボーナス+10含む）` : "";
+  const scoreLine = challengeMode
+    ? `<div class="item-desc">今回のスコア +${lastEarned}点${goldBonusNote}（累計 ${challengeScore}点）</div>`
+    : `<div class="item-desc">${result.item.desc}</div>`;
+
   stageArea.innerHTML = `
     <div class="result-card" style="background:${cardBg}">
       ${showShine ? '<div class="shine"></div>' : ''}
@@ -494,15 +725,143 @@ function renderReveal(){
       <div class="rarity-badge" style="background:${r.color}; color:${badgeTextColor}">${r.label}</div>
       <div class="item-name">${result.item.name}</div>
     </div>
-    <div class="item-desc">${result.item.desc}</div>
+    ${scoreLine}
     <div class="btn-row">
       <button class="share-btn" id="shareBtn">Xでシェア</button>
-      <button class="retry-btn" id="retryBtn">もう一回ほじる</button>
+      <button class="retry-btn" id="retryBtn">${nextLabel}</button>
     </div>
   `;
   progressArea.innerHTML = "";
-  document.getElementById("retryBtn").addEventListener("click", resetGacha);
+  document.getElementById("retryBtn").addEventListener("click", () => {
+    if(isLastOfChallenge){
+      phase = "summary";
+      render();
+      renderModeSelect();
+      renderChallengeStatus();
+    } else {
+      resetGacha();
+    }
+  });
   document.getElementById("shareBtn").addEventListener("click", shareToX);
+}
+
+let lastNickname = "";
+let hasSubmittedThisRun = false;
+
+function renderSummary(){
+  const best = challengeLog.reduce((a,b) => a.score > b.score ? a : b, challengeLog[0]);
+  const rows = challengeLog.map((h,i) => `
+    <div class="rs-row">
+      <span>${i+1}回目</span>
+      <span>${h.rarity.label}${h.gold ? '（金）' : ''}</span>
+      <span>+${h.score}点</span>
+    </div>
+  `).join("");
+
+  stageArea.innerHTML = `
+    <div class="result-summary">
+      <div class="rs-ttl">${challengeMode}回チャレンジ 結果</div>
+      <div class="rs-score">${challengeScore}</div>
+      <div class="rs-score-label">合計スコア（点）</div>
+      <div class="rs-breakdown">${rows}</div>
+      <div class="btn-row">
+        <button class="share-btn" id="shareSummaryBtn">Xでシェア</button>
+        <button class="retry-btn" id="retrySummaryBtn">もう一度挑戦</button>
+      </div>
+
+      <div class="rank-entry">
+        <div class="rank-entry-ttl">ニックネームを入れてランキングに登録</div>
+        <div class="rank-input-row">
+          <input type="text" id="nicknameInput" class="rank-input" placeholder="ニックネーム" maxlength="12" value="${lastNickname}">
+          <button class="rank-submit-btn" id="submitRankBtn" ${hasSubmittedThisRun ? "disabled" : ""}>${hasSubmittedThisRun ? "登録済み" : "登録する"}</button>
+        </div>
+        <div class="rank-msg" id="rankMsg"></div>
+        <div class="rank-list-ttl">${challengeMode}回チャレンジ ランキング TOP20</div>
+        <div class="rank-list" id="rankList"><div class="rank-msg">読み込み中…</div></div>
+      </div>
+    </div>
+  `;
+  progressArea.innerHTML = "";
+  document.getElementById("retrySummaryBtn").addEventListener("click", () => startChallenge(challengeMode));
+  document.getElementById("shareSummaryBtn").addEventListener("click", shareSummaryToX);
+  document.getElementById("submitRankBtn").addEventListener("click", handleSubmitRank);
+
+  loadRankingList();
+}
+
+async function handleSubmitRank(){
+  const input = document.getElementById("nicknameInput");
+  const msg = document.getElementById("rankMsg");
+  const btn = document.getElementById("submitRankBtn");
+  const nickname = (input.value || "").trim();
+
+  if(!nickname){
+    msg.textContent = "ニックネームを入力してください";
+    return;
+  }
+  if(typeof window.submitScore !== "function"){
+    msg.textContent = "ランキング機能はまだ準備中です";
+    return;
+  }
+
+  lastNickname = nickname;
+  btn.disabled = true;
+  btn.textContent = "送信中…";
+  msg.textContent = "";
+
+  const res = await window.submitScore(String(challengeMode), nickname, challengeScore);
+  if(res.ok){
+    hasSubmittedThisRun = true;
+    btn.textContent = "登録済み";
+    msg.textContent = "ランキングに登録しました！";
+    loadRankingList();
+  } else {
+    btn.disabled = false;
+    btn.textContent = "登録する";
+    msg.textContent = "登録に失敗しました。時間をおいて再度お試しください。";
+  }
+}
+
+async function loadRankingList(){
+  const listEl = document.getElementById("rankList");
+  if(!listEl) return;
+  if(typeof window.fetchRanking !== "function"){
+    listEl.innerHTML = `<div class="rank-msg">ランキング機能はまだ準備中です</div>`;
+    return;
+  }
+  const res = await window.fetchRanking(String(challengeMode));
+  if(!listEl) return; // 非同期中に画面が切り替わっていた場合の保護
+  if(!res.ok){
+    listEl.innerHTML = `<div class="rank-msg">ランキングを読み込めませんでした</div>`;
+    return;
+  }
+  if(res.rows.length === 0){
+    listEl.innerHTML = `<div class="rank-msg">まだ誰も登録していません。一番乗りになろう！</div>`;
+    return;
+  }
+  listEl.innerHTML = res.rows.map((row, i) => `
+    <div class="rank-list-row">
+      <span class="rank-no">${i+1}</span>
+      <span class="rank-name">${escapeHtml(row.nickname || "名無し")}</span>
+      <span class="rank-score">${row.score}点</span>
+    </div>
+  `).join("");
+}
+
+function escapeHtml(str){
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function shareSummaryToX(){
+  const text = `鼻くそガチャ ${challengeMode}回チャレンジで ${challengeScore}点 でした！\n鼻くそガチャ`;
+  const pageUrl = window.location.href;
+  const shareUrl = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(text) + "&url=" + encodeURIComponent(pageUrl);
+  window.open(shareUrl, "_blank");
 }
 
 function shareToX(){
@@ -522,6 +881,8 @@ function render(){
     renderGlowing();
   } else if(phase === "reveal"){
     renderReveal();
+  } else if(phase === "summary"){
+    renderSummary();
   }
 }
 
@@ -563,8 +924,18 @@ function handleDig(e){
           phase = "reveal";
           history.unshift({ rarity, item, gold, ts: Date.now() });
           history = history.slice(0,12);
+
+          if(challengeMode){
+            const goldBonus = gold ? 10 : 0;
+            const earnedScore = rarity.score + goldBonus;
+            challengeCount++;
+            challengeScore += earnedScore;
+            challengeLog.push({ rarity, item, gold, score: earnedScore });
+          }
+
           render();
           renderHistory();
+          renderChallengeStatus();
         }, 1100);
       }, 500);
     }, 700);
@@ -581,12 +952,14 @@ function resetGacha(){
   isGold = false;
   digCount = 0;
   render();
+  renderModeSelect();
+  renderChallengeStatus();
 }
 
 function renderRateTable(){
   const rows = RARITIES.slice().reverse().map(r => `
     <div class="rate-row">
-      <span><span class="dot" style="background:${r.color}"></span>${r.label}${r.canGold ? '<span class="gold-note">(50%で金)</span>' : ''}</span>
+      <span><span class="dot" style="background:${r.color}"></span>${r.label}${r.canGold ? '<span class="gold-note">(50%で金・+10点)</span>' : ''}</span>
       <span class="pct">${r.rate}%</span>
     </div>
   `).join("");
@@ -604,6 +977,7 @@ function renderHistory(){
 }
 
 renderRateTable();
+renderModeSelect();
 render();
 </script>
 </body>
