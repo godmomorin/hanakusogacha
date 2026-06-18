@@ -5,40 +5,31 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>鼻くそガチャ</title>
 <script type="module">
-  // ===================== Firebase 設定 =====================
-  // 下の firebaseConfig の値を、あなたのFirebaseプロジェクトの設定値に
-  // 書き換えてください（Firebaseコンソール → プロジェクトの設定 → 「マイアプリ」内に表示されます）。
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import {
-    getFirestore, collection, addDoc, query, orderBy, limit, getDocs, serverTimestamp
-  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  // ===================== Supabase 設定 =====================
+  // 下の SUPABASE_URL と SUPABASE_ANON_KEY を、あなたのSupabaseプロジェクトの値に
+  // 書き換えてください（Supabase管理画面 → Project Settings → API に表示されます）。
+  import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyDVM5fXlGC5XE9uP4tshLesu7cKUt9l-O4",
-    authDomain: "hanakusogacha.firebaseapp.com",
-    projectId: "hanakusogacha",
-    storageBucket: "hanakusogacha.firebasestorage.app",
-    messagingSenderId: "457486026277",
-    appId: "1:457486026277:web:c2b8975f99330f521461cc"
-  };
+  const SUPABASE_URL = "https://ccqaxjxsxjveafgfnkes.supabase.co";
+  const SUPABASE_ANON_KEY = "sb_publishable_U4ngLzcdX5Hw-e4vPzmgLw_-pnUp3ty";
 
-  let db = null;
+  let supabase = null;
   try {
-    const app = initializeApp(firebaseConfig);
-    db = getFirestore(app);
+    if(SUPABASE_URL && !SUPABASE_URL.startsWith("YOUR_")){
+      supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    }
   } catch(e) {
-    console.warn("Firebase未設定、または初期化に失敗しました。ランキング機能は無効化されます。", e);
+    console.warn("Supabase未設定、または初期化に失敗しました。ランキング機能は無効化されます。", e);
   }
 
   // ランキングへの登録（modeは "5" または "10"）
   window.submitScore = async function(mode, nickname, score){
-    if(!db) return { ok:false, error:"firebase-not-configured" };
+    if(!supabase) return { ok:false, error:"supabase-not-configured" };
     try{
-      await addDoc(collection(db, "rankings_" + mode), {
-        nickname: nickname,
-        score: score,
-        createdAt: serverTimestamp()
-      });
+      const { error } = await supabase
+        .from("rankings")
+        .insert({ mode: String(mode), nickname: nickname, score: score });
+      if(error) throw error;
       return { ok:true };
     }catch(e){
       console.error("ランキング登録に失敗:", e);
@@ -48,20 +39,23 @@
 
   // ランキング取得（上位20件）
   window.fetchRanking = async function(mode){
-    if(!db) return { ok:false, error:"firebase-not-configured", rows:[] };
+    if(!supabase) return { ok:false, error:"supabase-not-configured", rows:[] };
     try{
-      const q = query(collection(db, "rankings_" + mode), orderBy("score", "desc"), limit(20));
-      const snap = await getDocs(q);
-      const rows = [];
-      snap.forEach(doc => rows.push(doc.data()));
-      return { ok:true, rows };
+      const { data, error } = await supabase
+        .from("rankings")
+        .select("nickname, score")
+        .eq("mode", String(mode))
+        .order("score", { ascending:false })
+        .limit(20);
+      if(error) throw error;
+      return { ok:true, rows: data };
     }catch(e){
       console.error("ランキング取得に失敗:", e);
       return { ok:false, error:e.message, rows:[] };
     }
   };
 
-  window.dispatchEvent(new Event("firebase-ready"));
+  window.dispatchEvent(new Event("supabase-ready"));
 </script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Kosugi+Maru&family=Nunito:wght@600;700;800;900&display=swap');
